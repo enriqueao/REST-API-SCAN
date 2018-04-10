@@ -15,19 +15,16 @@ module.exports = {
         });
     },
 
-    save: function (req, res) {
+    savecode: function (req, res) {
         var param = {
-            lat: req.param('lat'),
-            lng: req.param('lng'),
-            costo: req.param('costo'),
-            descripciones: req.param('descripciones'),
-            telefono: req.param('telefono'),
-            fechaPublicacion: req.param('fechaPublicacion'),
-            fechavencimiento: req.param('fechavencimiento'),
-            zonainmueble: req.param('zonainmueble')
+            codigodebarras: req.param('code'),
         }
         Productos.create(param).exec(function (err, users) {
-            console.log("done");
+            if (err) {
+                console.log(err);
+                res.json({ status: 2});
+            }
+            res.json({status: 1});
         });
     },
 
@@ -54,6 +51,5 @@ module.exports = {
         return;
     }
 };
-
 
 

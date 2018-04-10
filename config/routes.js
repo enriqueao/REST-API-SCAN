@@ -34,7 +34,17 @@ module.exports.routes = {
 
   '/': {
     view: 'homepage'
-  }
+  },
+
+  /******************************PRODUCTOS***********************************/
+  'POST /scanmarket/product/savecode': {
+    cors: {
+      origin: '*',
+      headers: 'Content-Type, Authorization'
+    },
+    controller: 'ProductosController',
+    action: 'savecode'
+  },
 
   /***************************************************************************
   *                                                                          *

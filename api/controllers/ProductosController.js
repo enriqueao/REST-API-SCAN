@@ -19,12 +19,21 @@ module.exports = {
         var param = {
             codigodebarras: req.param('code'),
         }
-        Productos.create(param).exec(function (err, users) {
+        Productos.find(param).exec(function (err, productos) {
             if (err) {
                 console.log(err);
-                res.json({ status: 2});
             }
-            res.json({status: 1});
+            console.log(productos.length);
+            if (productos.length <= 0){
+                Productos.create(param).exec(function (err, products) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    res.status(200).json({ status: 1 });
+                });
+            } else {
+                res.json({ status: 2, message: 'El código ya existe'});
+            }
         });
     },
 

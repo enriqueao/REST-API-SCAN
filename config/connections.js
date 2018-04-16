@@ -42,10 +42,10 @@ module.exports.connections = {
   ***************************************************************************/
   mysql: {
     adapter: 'sails-mysql',
-    host: '174.138.82.20',
-    user: 'scanmarket', //optional
-    password: '@scanmarket.', //optional
-    database: 'scanmarket' //optional
+    host: '192.241.142.12',
+    user: 'scanmarketpro', //optional
+    password: 'scanmarket@.', //optional
+    database: 'scanmarket_p' //optional
   },
 
   /***************************************************************************

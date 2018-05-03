@@ -14,30 +14,15 @@ module.exports = {
       primaryKey: true,
       columnName: 'idProduct'
     },
-    marca: {
+    format: {
       type: 'string',
       size: 25,
-      columnName: 'marca'
+      columnName: 'format'
     },
-    nombreProduct: {
+    description: {
       type: 'string',
-      size: 100,
-      columnName: 'nombreProduct'
-    },
-    formato: {
-      type: 'string',
-      size: 20,
-      columnName: 'formato'
-    },
-    idCategoriaProduct: {
-      type: 'integer',
-      defaultsTo: 1,
-      columnName: 'idCategoriaProduct'
-    },
-    descripcion: {
-      type: 'string',
-      size: 100,
-      columnName: 'descripcion'
+      size: 250,
+      columnName: 'description'
     },
     codigodebarras: {
       type: 'string',
@@ -45,6 +30,12 @@ module.exports = {
       columnName: 'codigodebarras',
       unique: true
     },
+    productpic: {
+      type: 'string',
+      size: 400,
+      defaultsTo:"https://vignette.wikia.nocookie.net/monsterhunterespanol/images/a/aa/Imagen-no-disponible-282x300.png",
+      columnName: 'productpic',
+    }
   }
 };
 

@@ -14,6 +14,10 @@ module.exports = {
       primaryKey: true,
       columnName: 'idPrice'
     },
+    idProduct: {
+      type: 'integer',
+      columnName: 'idProduct'
+    },
     price: {
       type: 'float',
       columnName: 'price'

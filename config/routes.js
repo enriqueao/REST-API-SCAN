@@ -54,6 +54,46 @@ module.exports.routes = {
     controller: 'ProductosController',
     action: 'getProductos'
   },
+  'GET /scanmarket/product/getProducto': {
+  cors: {
+    origin: '*',
+    headers: 'Content-Type, Authorization'
+  },
+  controller: 'ProductosController',
+  action: 'getProducto'
+},
+  'GET /scanmarket/product/getPreciosTiendas': {
+    cors: {
+      origin: '*',
+      headers: 'Content-Type, Authorization'
+    },
+    controller: 'ProductosController',
+    action: 'getPreciosTiendas'
+  },
+  'GET /scanmarket/product/getPrecioTienda': {
+    cors: {
+      origin: '*',
+      headers: 'Content-Type, Authorization'
+    },
+    controller: 'ProductosController',
+    action: 'getPrecioTienda'
+  },
+  'GET /scanmarket/product/getTodoProductos': {
+    cors: {
+      origin: '*',
+      headers: 'Content-Type, Authorization'
+    },
+    controller: 'ProductosController',
+    action: 'getTodoProductos'
+  },
+  'GET /scanmarket/product/getProductoLike': {
+    cors: {
+      origin: '*',
+      headers: 'Content-Type, Authorization'
+    },
+    controller: 'ProductosController',
+    action: 'getProductoLike'
+  }
   /**************************USUARIOS**********************************************/
   'GET /scanmarket/user/login': {
     cors:{

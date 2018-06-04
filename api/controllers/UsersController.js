@@ -46,18 +46,40 @@ module.exports = {
         }
         Users.find(param).exec(function (err, users) {
             if (err) {
-                res.json({ status: 3, message: 'Intente más tarde' });
+                res.json({ status: 3, msg: 'Intente más tarde' });
             }
             if (users.length == 0) {
                 Users.create(user).exec(function (err, users) {
                     if (err) {
-                        res.json({ status: 3, message: 'Intente más tarde' });
+                        res.json({ status: 3, msg: 'Intente más tarde' });
                     }
-                    res.status(200).json({ status: 1, message: 'Registrado Correctamente' });
+                    res.status(200).json({ status: 1, msg: 'Registrado Correctamente' });
                 });
             } else {
-                res.json({ status: 2, message: 'El correo ya se encuentra registrado' });
+                res.json({ status: 2, msg: 'El correo ya se encuentra registrado' });
             }
+        });
+    },
+    updateUser: (req, res)=> {
+        Users.update({ idUser: req.param('idUser') }, {
+            email: req.param('email'),
+            name: req.param('name'),
+            lastname: req.param('lastName'),
+        }).exec((err, users)=> {
+            if(err){
+                res.json({ status: 3, msg: 'Intente más tarde' });
+            }
+            res.json({ status: 1, msg: 'Actualización correcta' });
+        });
+    },
+    updatePassword: (req, res)=>{
+        Users.update({ idUser: req.param('idUser') }, {
+            password: req.param('password'),
+        }).exec((err, users) => {
+            if (err) {
+                res.json({ status: 3, msg: 'Intente más tarde' });
+            }
+            res.json({ status: 1, msg: 'Actualización correcta' });
         });
     },
 };

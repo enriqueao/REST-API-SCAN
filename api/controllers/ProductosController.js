@@ -6,15 +6,18 @@
  */
 
 module.exports = {
-    getPublicaciones: function (req, res) {
-        Productos.find().exec(function (err, productos) {
+    getProductos: function (req, res) {
+        var param = {
+            codigodebarras: req.param('upc'),
+        }
+        Productos.find(param).exec(function (err, productos) {
             if (err) {
                 console.log(err);
             }
+            console.log(productos);
             res.json(productos);
         });
     },
-
     savecode: function (req, res) {
         var param = {
             codigodebarras: req.param('code'),
@@ -36,7 +39,6 @@ module.exports = {
             }
         });
     },
-
     update: function (req, res) {
         Productos.update({ idPublicacion: req.param('idPublicacion') }, {
             lat: req.param('lat'),

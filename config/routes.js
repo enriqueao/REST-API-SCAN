@@ -46,6 +46,32 @@ module.exports.routes = {
     action: 'savecode'
   },
 
+  'GET /scanmarket/product/getProductos': {
+    cors:{
+      origin: '*',
+      headers: 'Content-Type, Authorization'
+    },
+    controller: 'ProductosController',
+    action: 'getProductos'
+  },
+  /**************************USUARIOS**********************************************/
+  'GET /scanmarket/user/login': {
+    cors:{
+      origin: '*',
+      headers: 'Content-Type, Authorization'
+    },
+    controller: 'UsersController',
+    action: 'loginUser'
+  },
+  'POST /scanmarket/user/create': {
+    cors:{
+      origin: '*',
+      headers: 'Content-Type, Authorization'
+    },
+    controller: 'UsersController',
+    action: 'createUser'
+  }
+
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

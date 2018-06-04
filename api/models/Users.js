@@ -17,12 +17,19 @@ module.exports = {
     email: {
       type: 'string',
       size: 50,
-      columnName: 'email'
+      columnName: 'email',
+      unique: true
     },
     password: {
       type: 'string',
       size: 200,
       columnName: 'password'
+    },
+    img: {
+      type: 'string',
+      size: 200,
+      columnName: 'img',
+      defaultsTo: 'Algo'
     },
     name: {
       type: 'string',

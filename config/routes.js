@@ -126,7 +126,7 @@ module.exports.routes = {
     controller: 'UsersController',
     action: 'updateUser'
   },
-  
+
   'POST /scanmarket/user/updatePass': {
     cors:{
       origin: '*',
@@ -134,6 +134,15 @@ module.exports.routes = {
     },
     controller: 'UsersController',
     action: 'updatePassword'
+  },
+  
+  'POST /scanmarket/user/updateImgProfile': {
+    cors:{
+      origin: '*',
+      headers: 'Content-Type, Authorization'
+    },
+    controller: 'UsersController',
+    action: 'updateImgProfile'
   },
 
   /***************************************************************************

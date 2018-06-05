@@ -43,31 +43,32 @@ module.exports = {
         var param = {
             email: req.param('email'),
         }
-
-        req.file('imgProfile').upload({
-            maxBytes: 20000000,
-            dirname: require('path').resolve(sails.config.appPath, 'assets/images/profile')
-        }, function (err, uploadedFiles) {
+        Users.find(param).exec(function (err, users) {
             if (err) {
-                res.json({ status: 3, msg: 'Error al subir imagen de perfil' });
-            } else {
-                user.img = uploadedFiles[0].fd.split('\\').pop();
+                res.json({ status: 3, msg: 'Intente más tarde' });
             }
-            Users.find(param).exec(function (err, users) {
-                if (err) {
-                    res.json({ status: 3, msg: 'Intente más tarde' });
-                }
-                if (users.length == 0) {
+            console.log(users.length);
+            console.log(users);
+            if (users.length == 0) {
+                req.file('imgProfile').upload({
+                    maxBytes: 20000000,
+                    dirname: require('path').resolve(sails.config.appPath, 'assets/images/profile')
+                }, function (err, uploadedFiles) {
+                    if (err) {
+                        res.json({ status: 3, msg: 'Error al subir imagen de perfil' });
+                    } else {
+                        user.img = uploadedFiles[0].fd.split('\\').pop();
+                    }
                     Users.create(user).exec(function (err, users) {
                         if (err) {
                             res.json({ status: 3, msg: 'Intente más tarde' });
                         }
                         res.status(200).json({ status: 1, msg: 'Registrado Correctamente' });
                     });
-                } else {
-                    res.json({ status: 2, msg: 'El correo ya se encuentra registrado' });
-                }
-            });
+                });
+            } else {
+                res.json({ status: 2, msg: 'El correo ya se encuentra registrado' });
+            }
         });
     },
     updateUser: (req, res)=> {

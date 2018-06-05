@@ -16,48 +16,58 @@ module.exports = {
             if (err) {
                 datos.status = 3;
                 datos.msg = "Error Intente más tarde";
-                datos.user = users;
+                datos.data = users;
                 res.json(datos);
             }
             if (users.length == 1){
                 datos.status = 1;
                 datos.msg = "Bienvenido";
-                datos.user = users;
+                datos.data = users;
                 res.json(datos);
             } else {
                 datos.status = 2;
                 datos.msg = "Contraseña o correo incorrectos";
-                datos.user = users;
+                datos.data = users;
                 res.json(datos);
             }
         });
     },
     createUser: (req, res)=> {
-        // console.log(req.file('imgProfile'));
         var user = {
             email: req.param('email'),
             password: req.param('password'),
             name: req.param('name'),
             lastname: req.param('lastName'),
         }
-        console.log(user);
+
         var param = {
             email: req.param('email'),
         }
-        Users.find(param).exec(function (err, users) {
+
+        req.file('imgProfile').upload({
+            maxBytes: 20000000,
+            dirname: require('path').resolve(sails.config.appPath, 'assets/images/profile')
+        }, function (err, uploadedFiles) {
             if (err) {
-                res.json({ status: 3, msg: 'Intente más tarde' });
-            }
-            if (users.length == 0) {
-                Users.create(user).exec(function (err, users) {
-                    if (err) {
-                        res.json({ status: 3, msg: 'Intente más tarde' });
-                    }
-                    res.status(200).json({ status: 1, msg: 'Registrado Correctamente' });
-                });
+                res.json({ status: 3, msg: 'Error al subir imagen de perfil' });
             } else {
-                res.json({ status: 2, msg: 'El correo ya se encuentra registrado' });
+                user.img = uploadedFiles[0].fd.split('\\').pop();
             }
+            Users.find(param).exec(function (err, users) {
+                if (err) {
+                    res.json({ status: 3, msg: 'Intente más tarde' });
+                }
+                if (users.length == 0) {
+                    Users.create(user).exec(function (err, users) {
+                        if (err) {
+                            res.json({ status: 3, msg: 'Intente más tarde' });
+                        }
+                        res.status(200).json({ status: 1, msg: 'Registrado Correctamente' });
+                    });
+                } else {
+                    res.json({ status: 2, msg: 'El correo ya se encuentra registrado' });
+                }
+            });
         });
     },
     updateUser: (req, res)=> {
@@ -82,5 +92,20 @@ module.exports = {
             res.json({ status: 1, msg: 'Actualización correcta' });
         });
     },
+    updateImgProfile: (req, res)=>{
+        req.file('imgProfile').upload({
+            maxBytes: 20000000,
+            dirname: require('path').resolve(sails.config.appPath, 'assets/images/profile')
+        }, function (err, uploadedFiles) {
+            if (err){
+                res.json({ status: 3, msg: 'Intente más tarde' });
+            }
+            Publicacion.update({ idUser: req.param("idUser") },
+                { img: uploadedFiles[0].fd.split('\\').pop() }
+            ).exec(function (err, users) {
+                res.status(200).json({ status: 1, msg: 'Actualización correcta' });
+            });
+        });
+    }
 };
 

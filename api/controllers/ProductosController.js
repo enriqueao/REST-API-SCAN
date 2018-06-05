@@ -6,62 +6,73 @@
  */
 
 module.exports = {
-    getPublicaciones: function (req, res) {
+    getProductos: function (req, res) {
         Productos.find().exec(function (err, productos) {
             if (err) {
-                console.log(err);
+                res.status(200).json({ status: 3, msg: 'Error Inesperedo', data: [] });
             }
-            res.json(productos);
+            res.status(200).json({ status: 3, msg: 'Correcto', data: productos });
         });
     },
+
     getProducto: function (req, res) {
         var param = {
             codigodebarras: req.param('upc'),
         }
         Productos.find(param).exec(function (err, productos) {
-          if (err) {
-            console.log(err);
-          }
-            console.log(productos);
-            res.json(productos);
+            if (err) {
+                res.status(200).json({ status: 3, msg: 'Error', data: [] });
+            }
+            res.status(200).json({ status: 1, msg: 'Producto Encontrado', data: productos });
           });
     },
+
     getPreciosTiendas: function(req, res){
       var param = {
         codigodebarras : req.param('upc'),
       }
       Preciosproductos.query('SELECT idProduct, price, s.idMarket, (SELECT marketname FROM markets WHERE idMarket = s.idMarket) as marketname FROM productsprices s WHERE idProduct IN (SELECT idProduct FROM products WHERE codigodebarras ='+req.param('upc')+')', ['upc'], function(err, prices) {
-  		  if (err) { return res.serverError(err); }
-  		  res.json(prices);
+  		    if (err) { 
+                res.status(200).json({ status: 3, msg: 'Error', data: [] }); 
+            }
+            res.status(200).json({ status: 1, msg: 'Producto Encontrado', data: prices });
   		});
     },
+
     getPrecioTienda: function(req, res){
       Preciosproductos.query('SELECT idProduct, price, s.idMarket, (SELECT marketname FROM markets WHERE idMarket = s.idMarket) as marketname FROM productsprices s WHERE idProduct IN (SELECT idProduct FROM products WHERE codigodebarras ='+req.param('upc')+ ' AND idMarket ='+req.param('idTienda')+')', function(err, price) {
-  		  if (err) { return res.serverError(err); }
-  		  res.json(price);
+          if (err) {
+              res.status(200).json({ status: 3, msg: 'Error', data: [] });
+          }
+          res.status(200).json({ status: 1, msg: 'Producto Encontrado', data: prices });
   		});
     },
+
     getTodoProductos: function(req, res){
-        Productos.query('SELECT idProduct, format, description, codigodebarras, productpic FROM products', function(err,all){
-          res.json(all);
-          if(err){return res.serverError(err);}
+        Productos.query('SELECT idProduct, format, description, codigodebarras, productpic FROM products', function(err, all){
+            if (err) {
+                res.status(200).json({ status: 3, msg: 'Error', data: [] });
+            }
+            res.status(200).json({ status: 1, msg: 'Producto Encontrado', data: all });
         });
     },
+
     getProductoLike: function(req, res){
       Productos.query('SELECT idProduct, format, description, codigodebarras, productpic FROM products WHERE description LIKE "%'+req.param('search')+'%" OR codigodebarras LIKE "%'+req.param('search')+'%"', function (err, result){
-        res.json(result);
-        if (err) {return res.serverError(err);}
+          if (err) {
+              res.status(200).json({ status: 3, msg: 'Error', data: [] });
+          }
+          res.status(200).json({ status: 1, msg: 'Producto Encontrado', data: result });
       });
     },
+
     savecode: function (req, res) {
         var param = {
-            // Mismo nombre de la columna, requesición POST
             codigodebarras: req.param('code'),
         }
-        // Modelo Productos (UPC)
         Productos.find(param).exec(function (err, productos) {
             if (err) {
-                console.log(err);
+                res.status(200).json({ status: 3, msg: 'Error', data: [] });
             }
             console.log(productos.length);
             if (productos.length <= 0){
@@ -89,15 +100,20 @@ module.exports = {
             fechavencimiento: req.param('fechavencimiento'),
             zonainmueble: req.param('zonainmueble')
         }).exec(function (err, users) {
-            console.log("done");
+            if (err) {
+                res.status(200).json({ status: 3, msg: 'Error', data: [] });
+            }
+            res.status(200).json({ status: 1, msg: 'Correcto', data: [] });
         });
         return;
     },
 
     delete: function (req, res) {
         Productos.destroy({ idPublicacion: req.param('idPublicacion') }).exec(function (err, users) {
-            console.log("done");
+            if (err) {
+                res.status(200).json({ status: 3, msg: 'Error', data: [] });
+            }
+            res.status(200).json({ status: 1, msg: 'Correcto', data: result });
         });
-        return;
     }
 };

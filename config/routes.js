@@ -32,9 +32,9 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'homepage'
-  },
+  // '/': {
+  //   view: 'homepage'
+  // },
 
   /******************************PRODUCTOS***********************************/
   'POST /scanmarket/product/savecode': {
@@ -47,21 +47,23 @@ module.exports.routes = {
   },
 
   'GET /scanmarket/product/getProductos': {
-    cors:{
+    cors: {
       origin: '*',
       headers: 'Content-Type, Authorization'
     },
     controller: 'ProductosController',
     action: 'getProductos'
   },
+
   'GET /scanmarket/product/getProducto': {
-  cors: {
-    origin: '*',
-    headers: 'Content-Type, Authorization'
+    cors: {
+      origin: '*',
+      headers: 'Content-Type, Authorization'
+    },
+    controller: 'ProductosController',
+    action: 'getProducto'
   },
-  controller: 'ProductosController',
-  action: 'getProducto'
-},
+
   'GET /scanmarket/product/getPreciosTiendas': {
     cors: {
       origin: '*',
@@ -70,6 +72,7 @@ module.exports.routes = {
     controller: 'ProductosController',
     action: 'getPreciosTiendas'
   },
+
   'GET /scanmarket/product/getPrecioTienda': {
     cors: {
       origin: '*',
@@ -78,6 +81,7 @@ module.exports.routes = {
     controller: 'ProductosController',
     action: 'getPrecioTienda'
   },
+
   'GET /scanmarket/product/getTodoProductos': {
     cors: {
       origin: '*',
@@ -86,6 +90,7 @@ module.exports.routes = {
     controller: 'ProductosController',
     action: 'getTodoProductos'
   },
+
   'GET /scanmarket/product/getProductoLike': {
     cors: {
       origin: '*',
@@ -93,7 +98,7 @@ module.exports.routes = {
     },
     controller: 'ProductosController',
     action: 'getProductoLike'
-  }
+  },
   /**************************USUARIOS**********************************************/
   'GET /scanmarket/user/login': {
     cors:{
@@ -103,6 +108,7 @@ module.exports.routes = {
     controller: 'UsersController',
     action: 'loginUser'
   },
+
   'POST /scanmarket/user/create': {
     cors:{
       origin: '*',
@@ -111,6 +117,7 @@ module.exports.routes = {
     controller: 'UsersController',
     action: 'createUser'
   },
+
   'POST /scanmarket/user/update': {
     cors:{
       origin: '*',
@@ -119,6 +126,7 @@ module.exports.routes = {
     controller: 'UsersController',
     action: 'updateUser'
   },
+  
   'POST /scanmarket/user/updatePass': {
     cors:{
       origin: '*',

@@ -40,6 +40,16 @@ module.exports = {
       type: 'string',
       size: 40,
       columnName: 'lastname'
-    }
+    },
+    code: {
+      type: 'string',
+      size: 9,
+      columnName: 'code',
+    },
+    status: {
+      type: 'integer',
+      columnName: 'status',
+      defaultsTo: 0,
+    },
   }
 };

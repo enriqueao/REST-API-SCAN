@@ -115,5 +115,19 @@ module.exports = {
             }
             res.status(200).json({ status: 1, msg: 'Correcto', data: result });
         });
-    }
+    },
+
+    createProduct: (req, res)=>{
+        var product = {
+            format: req.param('format'),
+            description: req.param('description'),
+            codigodebarras: req.param('codigodebarras'),
+        }
+        Productos.create(product).exec(function (err, create) {
+            if (err) {
+                res.json({ status: 3, msg: 'Intente más tarde' });
+            }
+            res.status(200).json({ status: 1, msg: 'Registrado Correctamente' });
+        });
+    },
 };

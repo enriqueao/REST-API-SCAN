@@ -7,9 +7,11 @@
   "dependencies": {
     "ejs": "^2.5.8",
     "include-all": "^1.0.0",
+    "nodemailer": "^4.6.5",
     "rc": "1.0.1",
     "sails": "~0.12.14",
     "sails-disk": "~0.10.9",
+    "sails-hook-email": "^0.12.1",
     "sails-mysql": "^0.11.5"
   },
   "scripts": {

@@ -99,6 +99,15 @@ module.exports.routes = {
     controller: 'ProductosController',
     action: 'getProductoLike'
   },
+
+  'POST /scanmarket/product/createProduct': {
+    cors: {
+      origin: '*',
+      headers: 'Content-Type, Authorization'
+    },
+    controller: 'ProductosController',
+    action: 'createProduct'
+  },
   /**************************USUARIOS**********************************************/
   'GET /scanmarket/user/login': {
     cors:{
@@ -143,6 +152,15 @@ module.exports.routes = {
     },
     controller: 'UsersController',
     action: 'updateImgProfile'
+  },
+
+  'POST /scanmarket/user/codeConfirm': {
+    cors: {
+      origin: '*',
+      headers: 'Content-Type, Authorization'
+    },
+    controller: 'UsersController',
+    action: 'codeConfirm'
   },
 
   /***************************************************************************

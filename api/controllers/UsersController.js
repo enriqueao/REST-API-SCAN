@@ -33,37 +33,56 @@ module.exports = {
         });
     },
     createUser: (req, res)=> {
+        var code = Math.floor((Math.random() * 999999999) + 111001001);
         var user = {
             email: req.param('email'),
             password: req.param('password'),
             name: req.param('name'),
             lastname: req.param('lastName'),
+            img: req.param('imgProfile'),
+            code: code,
         }
-
         var param = {
             email: req.param('email'),
         }
+
         Users.find(param).exec(function (err, users) {
             if (err) {
                 res.json({ status: 3, msg: 'Intente más tarde' });
             }
-            console.log(users.length);
-            console.log(users);
             if (users.length == 0) {
-                req.file('imgProfile').upload({
-                    maxBytes: 20000000,
-                    dirname: require('path').resolve(sails.config.appPath, 'assets/images/profile')
-                }, function (err, uploadedFiles) {
+                Users.create(user).exec(function (err, users) {
                     if (err) {
-                        res.json({ status: 3, msg: 'Error al subir imagen de perfil' });
-                    } else {
-                        user.img = uploadedFiles[0].fd.split('\\').pop();
+                        res.json({ status: 3, msg: 'Intente más tarde' });
                     }
-                    Users.create(user).exec(function (err, users) {
-                        if (err) {
-                            res.json({ status: 3, msg: 'Intente más tarde' });
+                    let nodemailer = require('nodemailer');
+                    // Definimos el transporter
+                    var transporter = nodemailer.createTransport({
+                        service: 'Gmail',
+                        auth: {
+                            user: 'noreplysaluduaq@gmail.com',
+                            pass: '@saluduaq'
                         }
-                        res.status(200).json({ status: 1, msg: 'Registrado Correctamente' });
+                    });
+                    // Definimos el email
+                    var mailOptions = {
+                        from: "noreply@scanmart.com",
+                        to: "enriqueao96@gmail.com",
+                        subject: 'Código de Verificación ScanMart',
+                        text: code.toString(),
+                    };
+                    // Enviamos el email
+                    transporter.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+                            Users.destroy(param).exec(function (err, users) {
+                                if (err) {
+                                    res.status(200).json({ status: 3, msg: 'Error', data: [] });
+                                }
+                                res.json({ status: 3, msg: 'Intente más tarde' });
+                            });
+                        } else {
+                            res.status(200).json({ status: 1, msg: 'Registrado Correctamente' });
+                        }
                     });
                 });
             } else {
@@ -94,19 +113,34 @@ module.exports = {
         });
     },
     updateImgProfile: (req, res)=>{
-        req.file('imgProfile').upload({
-            maxBytes: 20000000,
-            dirname: require('path').resolve(sails.config.appPath, 'assets/images/profile')
-        }, function (err, uploadedFiles) {
-            if (err){
+        Publicacion.update({ idUser: req.param("idUser") },
+            { img: req.param("imgProfile")}
+        ).exec(function (err, users) {
+            res.status(200).json({ status: 1, msg: 'Actualización correcta' });
+        });
+    },
+    codeConfirm: ()=>{
+        let param = {
+            email: req.param('email'), 
+            code: req.param('code')
+        };
+        Users.find(param).exec(function (err, users) {
+            if (err) {
                 res.json({ status: 3, msg: 'Intente más tarde' });
             }
-            Publicacion.update({ idUser: req.param("idUser") },
-                { img: uploadedFiles[0].fd.split('\\').pop() }
-            ).exec(function (err, users) {
-                res.status(200).json({ status: 1, msg: 'Actualización correcta' });
-            });
+            if (users.length == 1) {
+                Users.update({ email: req.param('email'), code: req.param('code') }, {
+                    status: 1,
+                }).exec((err, users) => {
+                    if (err) {
+                        res.json({ status: 3, msg: 'Intente más tarde' });
+                    }
+                    res.json({ status: 1, msg: 'Código Confirmado' });
+                });
+            } else {
+                res.json({ status: 2, msg: 'Código Incorrecto' });
+            }
         });
-    }
+    },
 };
 

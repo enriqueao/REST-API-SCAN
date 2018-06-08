@@ -45,6 +45,13 @@ module.exports = {
         var param = {
             email: req.param('email'),
         }
+        var mailOptions = {
+            from: "noreply@scanmart.com",
+            subject: 'Código de Verificación ScanMart',
+            text: code.toString(),
+        };
+        mailOptions.to = req.param('email');
+        console.log(mailOptions);
 
         Users.find(param).exec(function (err, users) {
             if (err) {
@@ -62,15 +69,11 @@ module.exports = {
                         auth: {
                             user: 'noreplysaluduaq@gmail.com',
                             pass: '@saluduaq'
-                        }
+                        },
+                        port: 465,
+                        secure: true,
                     });
-                    // Definimos el email
-                    var mailOptions = {
-                        from: "noreply@scanmart.com",
-                        to: "enriqueao96@gmail.com",
-                        subject: 'Código de Verificación ScanMart',
-                        text: code.toString(),
-                    };
+                    
                     // Enviamos el email
                     transporter.sendMail(mailOptions, function (error, info) {
                         if (error) {
@@ -78,7 +81,7 @@ module.exports = {
                                 if (err) {
                                     res.status(200).json({ status: 3, msg: 'Error', data: [] });
                                 }
-                                res.json({ status: 3, msg: 'Intente más tarde' });
+                                res.json({ status: 3, msg: 'Intente más tarde, error en el servicio de correo' });
                             });
                         } else {
                             res.status(200).json({ status: 1, msg: 'Registrado Correctamente' });
@@ -119,7 +122,7 @@ module.exports = {
             res.status(200).json({ status: 1, msg: 'Actualización correcta' });
         });
     },
-    codeConfirm: ()=>{
+    codeConfirm: (req, res)=>{
         let param = {
             email: req.param('email'), 
             code: req.param('code')

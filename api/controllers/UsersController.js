@@ -19,6 +19,12 @@ module.exports = {
                 datos.data = users;
                 res.json(datos);
             }
+            if(users.status == 0){
+                datos.status = 2;
+                datos.msg = "Debe confirmar el código de verificación";
+                datos.data = users;
+                res.json(datos);
+            }
             if (users.length == 1){
                 datos.status = 1;
                 datos.msg = "Bienvenido";
@@ -39,7 +45,7 @@ module.exports = {
             password: req.param('password'),
             name: req.param('name'),
             lastname: req.param('lastName'),
-            img: req.param('imgProfile'),
+            img: 'Default.jpg',
             code: code,
         }
         var param = {
@@ -51,41 +57,46 @@ module.exports = {
             text: code.toString(),
         };
         mailOptions.to = req.param('email');
-        console.log(mailOptions);
-
         Users.find(param).exec(function (err, users) {
             if (err) {
                 res.json({ status: 3, msg: 'Intente más tarde' });
             }
             if (users.length == 0) {
-                Users.create(user).exec(function (err, users) {
+                req.file('imgProfile').upload({
+                    maxBytes: 20000000,
+                    dirname: require('path').resolve(sails.config.appPath, 'assets/images/profile')
+                }, function (err, uploadedFiles) {
                     if (err) {
-                        res.json({ status: 3, msg: 'Intente más tarde' });
+                        res.json({ status: 3, msg: 'Error al subir imagen de perfil' });
+                    } else {
+                        user.img = uploadedFiles[0].fd.split('\\').pop();
                     }
-                    let nodemailer = require('nodemailer');
-                    // Definimos el transporter
-                    var transporter = nodemailer.createTransport({
-                        service: 'Gmail',
-                        auth: {
-                            user: 'noreplysaluduaq@gmail.com',
-                            pass: '@saluduaq'
-                        },
-                        port: 465,
-                        secure: true,
-                    });
-                    
-                    // Enviamos el email
-                    transporter.sendMail(mailOptions, function (error, info) {
-                        if (error) {
-                            Users.destroy(param).exec(function (err, users) {
-                                if (err) {
-                                    res.status(200).json({ status: 3, msg: 'Error', data: [] });
-                                }
-                                res.json({ status: 3, msg: 'Intente más tarde, error en el servicio de correo' });
-                            });
-                        } else {
-                            res.status(200).json({ status: 1, msg: 'Registrado Correctamente' });
+                    Users.create(user).exec(function (err, users) {
+                        if (err) {
+                            res.json({ status: 3, msg: 'Intente más tarde' });
                         }
+                        let nodemailer = require('nodemailer');
+                        var transporter = nodemailer.createTransport({
+                            service: 'Gmail',
+                            auth: {
+                                user: 'noreplysaluduaq@gmail.com',
+                                pass: '@saluduaq'
+                            },
+                            port: 465,
+                            secure: true,
+                        });
+                        transporter.sendMail(mailOptions, function (error, info) {
+                            if (error) {
+                                Users.destroy(param).exec(function (err, users) {
+                                    if (err) {
+                                        res.status(200).json({ status: 3, msg: 'Error', data: [] });
+                                    }
+                                    res.json({ status: 3, msg: 'Intente más tarde, error en el servicio de correo' });
+                                });
+                            } else {
+                                res.status(200).json({ status: 1, msg: 'Registrado Correctamente' });
+                            }
+                        });
                     });
                 });
             } else {
